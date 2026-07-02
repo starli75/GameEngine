@@ -32,9 +32,17 @@ int main()
             renderer.DrawPoint(rand() % 1920, rand() % 1024);
         }
 
-        renderer.SetColor(rand() % 256, rand() % 256, rand() % 256);
-        renderer.DrawFillRect(rand() % 1920, rand() % 1024, rand() % 100, rand() % 100);
-        renderer.DrawLine(rand() % 1920, rand() % 1024, rand() % 100, rand() % 100);
+        //Draw rectangles
+        for (int i = 0; i < 10; i++) {
+            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256);
+            renderer.DrawFillRect(rand() % 1920, rand() % 1024, rand() % 100, rand() % 100);
+        }
+
+        //Draw lines
+        for (int i = 0; i < 10; i++) {
+            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256);
+            renderer.DrawLine(rand() % 1920, rand() % 1024, rand() % 100, rand() % 100);
+        }
 
         renderer.Present();
     }
