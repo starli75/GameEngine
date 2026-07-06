@@ -1,52 +1,65 @@
-#include "../Engine/Engine.h"
-#include "SDL3/SDL.h"
+#include "Engine.h"
 
 #include <iostream>
+#include <vector>
+
+using namespace nu; //lets you take off the nu::
 
 //Hi
 
 
 int main()
 {   
+    //INITALIZATION
     nu::Renderer renderer;
     renderer.Initialize("Game Engine", 1920, 1024);
 
+    //std::cout << sizeof(Vector2) << std::endl;
+    Vector2 vel{ 0.5f, 0.0f };
 
-    SDL_Event e;
+    std::vector<Vector2> v;
+
+    for (int i = 0; i < 300; i++) {
+        v.push_back(Vector2 { nu::RandomFloat(1920), nu::RandomFloat(1024) });
+    }
+
+    //MAIN LOOP
     bool quit = false;
-
     while (!quit) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_EVENT_QUIT) {
+        //UPDATE
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
                 quit = true;
             }
         }
 
-
-        renderer.SetColor(0, 0, 0, 255);
+        //RENDER
+        renderer.SetColorFloat(0, 0, 0);
         renderer.Clear();
 
         //Draw points
-        for (int i = 0; i < 1000; i++) {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256, 255);
-            renderer.DrawPoint(rand() % 1920, rand() % 1024);
+        for (int i = 0; i < v.size(); i++) {
+            renderer.SetColorFloat(nu::RandomFloat(256), nu::RandomFloat(256), nu::RandomFloat(256));
+            v[i] = v[i] + vel;
+            renderer.DrawPoint(v[i].x, v[i].y);
         }
 
         //Draw rectangles
-        for (int i = 0; i < 10; i++) {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256);
-            renderer.DrawFillRect(rand() % 1920, rand() % 1024, rand() % 100, rand() % 100);
-        }
+       /* for (int i = 0; i < 10; i++) {
+            renderer.SetColor(nu::RandomInt(256), nu::RandomInt(256), nu::RandomInt(256));
+            renderer.DrawFillRect(nu::RandomFloat(1920), nu::RandomFloat(1024), RandomInt(100), RandomInt(100));
+        }*/
 
         //Draw lines
-        for (int i = 0; i < 10; i++) {
-            renderer.SetColor(rand() % 256, rand() % 256, rand() % 256);
-            renderer.DrawLine(rand() % 1920, rand() % 1024, rand() % 100, rand() % 100);
-        }
+        /*for (int i = 0; i < 10; i++) {
+            renderer.SetColorFloat(nu::RandomFloat(256), nu::RandomFloat(256), nu::RandomFloat(256));
+            renderer.DrawLine(nu::RandomFloat(1920), nu::RandomFloat(1024), RandomInt(100), RandomInt(100));
+        }*/
 
         renderer.Present();
     }
-
+    //SHUTDOWN
     renderer.Shutdown();
 
     return 0;
