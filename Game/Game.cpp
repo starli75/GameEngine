@@ -5,14 +5,18 @@
 
 using namespace nu; //lets you take off the nu::
 
-//Hi
-
+void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector instead of making another copy
+    v[0].x = 40.0;
+}
 
 int main()
 {   
     //INITALIZATION
     nu::Renderer renderer;
     renderer.Initialize("Game Engine", 1920, 1024);
+
+    nu::Input input;
+    input.Initialize();
 
     //std::cout << sizeof(Vector2) << std::endl;
     Vector2 vel{ 0.5f, 0.0f };
@@ -32,7 +36,15 @@ int main()
             if (event.type == SDL_EVENT_QUIT) {
                 quit = true;
             }
+            if (event.type == SDL_EVENT_KEY_DOWN && event.key.scancode == SDL_SCANCODE_ESCAPE) {
+                quit = true;
+            }
         }
+        input.Update();
+
+        if (input.GetKeyPressed(SDL_SCANCODE_Q)) std::cout << "pressed\n";
+        if (input.GetKeyDown(SDL_SCANCODE_Q)) std::cout << "down\n";
+        if (input.GetKeyReleased(SDL_SCANCODE_Q)) std::cout << "released\n";
 
         //RENDER
         renderer.SetColorFloat(0, 0, 0);
@@ -44,6 +56,9 @@ int main()
             v[i] = v[i] + vel;
             renderer.DrawPoint(v[i].x, v[i].y);
         }
+
+        renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
+        renderer.DrawFillRect(input.GetMousePosition().x, input.GetMousePosition().y, 40, 40);
 
         //Draw rectangles
        /* for (int i = 0; i < 10; i++) {

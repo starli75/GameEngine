@@ -26,12 +26,14 @@ namespace nu
 
         return true;
     }
+   
     void Renderer::Shutdown()
     {
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
     }
+    
     void Renderer::SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     {
         SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
