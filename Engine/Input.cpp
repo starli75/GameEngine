@@ -16,8 +16,14 @@ namespace nu
 
 		return true;
 	}
+
 	void Input::Shutdown() {
 
+	}
+
+	uint32_t Input::GetButtonBit(MouseButton button) const
+	{
+		return SDL_BUTTON_MASK((uint32_t)button);
 	}
 
 	void Input::Update() {

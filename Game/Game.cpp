@@ -18,14 +18,13 @@ int main()
     nu::Input input;
     input.Initialize();
 
-    //std::cout << sizeof(Vector2) << std::endl;
+    nu::Time time;
+
+    Vector2 position{ 960.0f, 512.0f };
+    float speed = 400.0f;
     Vector2 vel{ 0.5f, 0.0f };
 
-    std::vector<Vector2> v;
-
-    for (int i = 0; i < 300; i++) {
-        v.push_back(Vector2 { nu::RandomFloat(1920), nu::RandomFloat(1024) });
-    }
+    std::vector<Vector2> points;
 
     //MAIN LOOP
     bool quit = false;
@@ -42,35 +41,31 @@ int main()
         }
         input.Update();
 
-        if (input.GetKeyPressed(SDL_SCANCODE_Q)) std::cout << "pressed\n";
-        if (input.GetKeyDown(SDL_SCANCODE_Q)) std::cout << "down\n";
-        if (input.GetKeyReleased(SDL_SCANCODE_Q)) std::cout << "released\n";
+        time.Tick();
+
+        if (input.GetButtonDown(Input::MouseButton::Left)) {
+            points.push_back(input.GetMousePosition());
+        }
+
+        Vector2 velocity{ 0.0f, 0.0f };
+        if (input.GetKeyDown(SDL_SCANCODE_A)) velocity.x = -speed;
+        if (input.GetKeyDown(SDL_SCANCODE_D)) velocity.x = +speed;
+        if (input.GetKeyDown(SDL_SCANCODE_W)) velocity.y = -speed;
+        if (input.GetKeyDown(SDL_SCANCODE_S)) velocity.y = +speed;
+        position += (velocity * time.GetDeltaTime());
 
         //RENDER
         renderer.SetColorFloat(0, 0, 0);
         renderer.Clear();
 
         //Draw points
-        for (int i = 0; i < v.size(); i++) {
-            renderer.SetColorFloat(nu::RandomFloat(256), nu::RandomFloat(256), nu::RandomFloat(256));
-            v[i] = v[i] + vel;
-            renderer.DrawPoint(v[i].x, v[i].y);
+        for (int i = 0; i < points.size(); i++) {
+            renderer.SetColorFloat(nu::RandomFloat(), nu::RandomFloat(), nu::RandomFloat());
+            renderer.DrawFillRect(points[i].x, points[i].y, 10, 10);
         }
 
         renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
-        renderer.DrawFillRect(input.GetMousePosition().x, input.GetMousePosition().y, 40, 40);
-
-        //Draw rectangles
-       /* for (int i = 0; i < 10; i++) {
-            renderer.SetColor(nu::RandomInt(256), nu::RandomInt(256), nu::RandomInt(256));
-            renderer.DrawFillRect(nu::RandomFloat(1920), nu::RandomFloat(1024), RandomInt(100), RandomInt(100));
-        }*/
-
-        //Draw lines
-        /*for (int i = 0; i < 10; i++) {
-            renderer.SetColorFloat(nu::RandomFloat(256), nu::RandomFloat(256), nu::RandomFloat(256));
-            renderer.DrawLine(nu::RandomFloat(1920), nu::RandomFloat(1024), RandomInt(100), RandomInt(100));
-        }*/
+        renderer.DrawFillRect(position.x, position.y, 40, 40);
 
         renderer.Present();
     }
