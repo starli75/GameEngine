@@ -5,6 +5,46 @@
 
 using namespace nu; //lets you take off the nu::
 
+struct Transform
+{
+    Vector2 position;
+    float rotation;
+    float scale;
+};
+
+class Actor
+{
+public:
+    Actor() = default;
+    Actor(const Transform& transform) : m_transform{ transform } {}
+
+    void Update(float dt) {
+        m_transform.position += (m_velocity * dt);
+        m_velocity *= 0.997f;
+
+        m_transform.position.x = math::Wrap(0.0f, 1920.0f, m_transform.position.x);
+        m_transform.position.y = math::Wrap(0.0f, 1024.0f, m_transform.position.y);
+    }
+
+    void Draw(Renderer& renderer) {
+        renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
+        renderer.DrawFillRect(m_transform.position.x - (m_transform.scale * 0.5f), m_transform.position.y - (m_transform.scale * 0.5f), m_transform.scale, m_transform.scale);
+    }
+
+    const Transform& GetTransform() const{ return m_transform;  }
+    void SetPosition(Vector2 position) { m_transform.position = position;  }
+    void SetRotation(float rotation) { m_transform.rotation = rotation;  }
+    void SetScale(float scale) { m_transform.scale = scale; }
+
+    const Vector2 GetVelocity() const { return m_velocity; }
+    void SetVelocity(Vector2 velocity) { m_velocity = velocity; }
+
+private:
+    Transform m_transform;
+    Vector2 m_velocity{ 0,0 };
+
+};
+
 void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector instead of making another copy
     v[0].x = 40.0;
 }
@@ -20,9 +60,11 @@ int main()
 
     nu::Time time;
 
+    Actor player{ Transform{ Vector2 {640.0f, 512.0f}, 0.0f, 50.0f} };
+
     Vector2 position{ 960.0f, 512.0f };
-    float speed = 400.0f;
-    Vector2 vel{ 0.5f, 0.0f };
+    Vector2 velocity{ 0.0f, 0.0f };
+    float speed = 800.0f;
 
     std::vector<Vector2> points;
 
@@ -44,28 +86,56 @@ int main()
         time.Tick();
 
         if (input.GetButtonDown(Input::MouseButton::Left)) {
-            points.push_back(input.GetMousePosition());
+            if (points.empty())
+            {
+                points.push_back(input.GetMousePosition());
+            }
+            else
+            {
+                Vector2 v = points.back() - input.GetMousePosition();
+
+                if (v.Length() > 10.0f) {
+                    points.push_back(input.GetMousePosition());
+                }
+            }
         }
 
-        Vector2 velocity{ 0.0f, 0.0f };
-        if (input.GetKeyDown(SDL_SCANCODE_A)) velocity.x = -speed;
-        if (input.GetKeyDown(SDL_SCANCODE_D)) velocity.x = +speed;
-        if (input.GetKeyDown(SDL_SCANCODE_W)) velocity.y = -speed;
-        if (input.GetKeyDown(SDL_SCANCODE_S)) velocity.y = +speed;
+        //Undo
+        if (input.GetButtonPressed(Input::MouseButton::Right))
+        {
+            points.pop_back();
+        }
+
+        Vector2 force{ 0.0f, 0.0f };
+
+        if (input.GetKeyDown(SDL_SCANCODE_A)) force.x = -speed;
+        if (input.GetKeyDown(SDL_SCANCODE_D)) force.x = +speed;
+        if (input.GetKeyDown(SDL_SCANCODE_W)) force.y = -speed;
+        if (input.GetKeyDown(SDL_SCANCODE_S)) force.y = +speed;
+
+        player.SetVelocity(player.GetVelocity() + (force * time.GetDeltaTime()));
+        player.Update(time.GetDeltaTime());
+
+       /* velocity += (force * time.GetDeltaTime());
         position += (velocity * time.GetDeltaTime());
+
+        position.x = math::Wrap(0.0f, 1920.0f, position.x);
+        position.y = math::Wrap(0.0f, 1280.0f, position.y);*/
 
         //RENDER
         renderer.SetColorFloat(0, 0, 0);
         renderer.Clear();
 
-        //Draw points
-        for (int i = 0; i < points.size(); i++) {
-            renderer.SetColorFloat(nu::RandomFloat(), nu::RandomFloat(), nu::RandomFloat());
-            renderer.DrawFillRect(points[i].x, points[i].y, 10, 10);
+        //Draw Line
+        for (int i = 0; i < (int)points.size() - 1; i++) {
+                renderer.SetColorFloat(nu::RandomFloat(), nu::RandomFloat(), nu::RandomFloat());
+                renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 
-        renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
-        renderer.DrawFillRect(position.x, position.y, 40, 40);
+        //Rectangle in the middle
+        player.Draw(renderer);
+       /* renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
+        renderer.DrawFillRect(position.x, position.y, 40, 40);*/
 
         renderer.Present();
     }

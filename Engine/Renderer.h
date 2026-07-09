@@ -13,13 +13,13 @@ namespace nu
 		void Clear();
 		void Present();
 
-		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);
-		void SetColorFloat(float r, float g, float b, float a = 1.0f);
+		void SetColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255) const;
+		void SetColorFloat(float r, float g, float b, float a = 1.0f) const;
 
-		void DrawPoint(float x, float y);
-		void DrawFillRect(float x, float y, float w, float h);
-		void DrawRect(float x, float y, float w, float h);
-		void DrawLine(float x, float y, float w, float h);
+		void DrawPoint(float x, float y) const;
+		void DrawFillRect(float x, float y, float w, float h) const;
+		void DrawRect(float x, float y, float w, float h) const;
+		void DrawLine(float x, float y, float w, float h) const;
 
 	private:
 		SDL_Window* m_window = nullptr;
