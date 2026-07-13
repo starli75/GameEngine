@@ -5,46 +5,6 @@
 
 using namespace nu; //lets you take off the nu::
 
-struct Transform
-{
-    Vector2 position;
-    float rotation;
-    float scale;
-};
-
-class Actor
-{
-public:
-    Actor() = default;
-    Actor(const Transform& transform) : m_transform{ transform } {}
-
-    void Update(float dt) {
-        m_transform.position += (m_velocity * dt);
-        m_velocity *= 0.997f;
-
-        m_transform.position.x = math::Wrap(0.0f, 1920.0f, m_transform.position.x);
-        m_transform.position.y = math::Wrap(0.0f, 1024.0f, m_transform.position.y);
-    }
-
-    void Draw(Renderer& renderer) {
-        renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
-        renderer.DrawFillRect(m_transform.position.x - (m_transform.scale * 0.5f), m_transform.position.y - (m_transform.scale * 0.5f), m_transform.scale, m_transform.scale);
-    }
-
-    const Transform& GetTransform() const{ return m_transform;  }
-    void SetPosition(Vector2 position) { m_transform.position = position;  }
-    void SetRotation(float rotation) { m_transform.rotation = rotation;  }
-    void SetScale(float scale) { m_transform.scale = scale; }
-
-    const Vector2 GetVelocity() const { return m_velocity; }
-    void SetVelocity(Vector2 velocity) { m_velocity = velocity; }
-
-private:
-    Transform m_transform;
-    Vector2 m_velocity{ 0,0 };
-
-};
-
 void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector instead of making another copy
     v[0].x = 40.0;
 }
