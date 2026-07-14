@@ -21,6 +21,8 @@ namespace nu
 		void DrawRect(float x, float y, float w, float h) const;
 		void DrawLine(float x, float y, float w, float h) const;
 
+		void DrawModel(const class Model& model, const struct Transform& transform) const;
+
 		int GetWidth() const { return m_width; }
 		int GetHeight() const { return m_height; }
 

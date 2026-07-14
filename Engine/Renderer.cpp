@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "Renderer.h"
+#include "Transform.h"
+#include "Model.h"
 
 #include <iostream>
+#include "Input.h"
 
 namespace nu
 {
@@ -75,6 +78,26 @@ namespace nu
     void Renderer::DrawLine(float x, float y, float w, float h) const
     {
         SDL_RenderLine(m_renderer, x, y, w, h);
+    }
+
+    void Renderer::DrawModel(const class Model& model, const struct Transform& transform) const
+    {
+        SetColorFloat(1.0f, 1.0f, 1.0f, 1.0f);
+
+        for (auto mesh : model.GetMeshes()) {
+
+            auto& points = mesh.GetPoints();
+
+            for (int i = 0; i + 1 < points.size(); i++) {
+                Vector2 v1 = points[i];
+                Vector2 v2 = points[i + 1];
+
+                v1 *= transform.scale;
+                v2 *= transform.scale;
+
+                DrawLine(v1.x, v1.y, v2.x, v2.y);
+            }
+        }
     }
 
     

@@ -11,6 +11,8 @@ void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector i
 
 int main()
 {   
+    Color color;
+    color.r = 1.0f;
     //INITALIZATION
     nu::Renderer renderer;
     renderer.Initialize("Game Engine", 1920, 1024);
@@ -20,7 +22,8 @@ int main()
 
     nu::Time time;
 
-    Actor player{ Transform{ Vector2 {640.0f, 512.0f}, 0.0f, 50.0f} };
+    Mesh mesh{ {Vector2{-3, 3}, Vector2{3,3}, Vector2{0,0}}, Color{ 0.0f, 0.0f, 1.0f } };
+    Actor player{ Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 50.0f }, std::vector<Mesh>{ mesh } };
 
     Vector2 position{ 960.0f, 512.0f };
     Vector2 velocity{ 0.0f, 0.0f };
