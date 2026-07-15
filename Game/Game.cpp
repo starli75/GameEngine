@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Player.h"
 
 #include <iostream>
 #include <vector>
@@ -14,21 +15,16 @@ int main()
     Color color;
     color.r = 1.0f;
     //INITALIZATION
-    nu::Renderer renderer;
-    renderer.Initialize("Game Engine", 1920, 1024);
+    engine.Initialize();
 
-    nu::Input input;
-    input.Initialize();
-
-    nu::Time time;
-
-    Mesh mesh{ {Vector2{-3, 3}, Vector2{3,3}, Vector2{0,0}}, Color{ 0.0f, 0.0f, 1.0f } };
-    Actor player{ Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 50.0f }, std::vector<Mesh>{ mesh } };
+    Mesh mesh{ {Vector2{2, 0}, Vector2{-2, 2}, Vector2{-1,0}, Vector2{2,0}, Vector2{-2,-2}, Vector2{-1,0}}, Color{0.0f, 0.0f, 1.0f} };
+    Player player{2000.0f, Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f }, std::vector<Mesh>{ mesh } };
 
     Vector2 position{ 960.0f, 512.0f };
     Vector2 velocity{ 0.0f, 0.0f };
-    float speed = 800.0f;
 
+
+    //Photoshop
     std::vector<Vector2> points;
 
     //MAIN LOOP
@@ -44,40 +40,33 @@ int main()
                 quit = true;
             }
         }
-        input.Update();
+        
+        //engine
+        engine.Update();
 
-        time.Tick();
+        player.SetRotation(player.GetTransform().rotation + (90.0f * engine.GetTime().GetDeltaTime()));
+        player.Update(engine.GetTime().GetDeltaTime());
 
-        if (input.GetButtonDown(Input::MouseButton::Left)) {
+        if (engine.GetInput().GetButtonDown(Input::MouseButton::Left)) {
             if (points.empty())
             {
-                points.push_back(input.GetMousePosition());
+                points.push_back(engine.GetInput().GetMousePosition());
             }
             else
             {
-                Vector2 v = points.back() - input.GetMousePosition();
+                Vector2 v = points.back() - engine.GetInput().GetMousePosition();
 
                 if (v.Length() > 10.0f) {
-                    points.push_back(input.GetMousePosition());
+                    points.push_back(engine.GetInput().GetMousePosition());
                 }
             }
         }
 
         //Undo
-        if (input.GetButtonPressed(Input::MouseButton::Right))
+        if (engine.GetInput().GetButtonPressed(Input::MouseButton::Right))
         {
             points.pop_back();
         }
-
-        Vector2 force{ 0.0f, 0.0f };
-
-        if (input.GetKeyDown(SDL_SCANCODE_A)) force.x = -speed;
-        if (input.GetKeyDown(SDL_SCANCODE_D)) force.x = +speed;
-        if (input.GetKeyDown(SDL_SCANCODE_W)) force.y = -speed;
-        if (input.GetKeyDown(SDL_SCANCODE_S)) force.y = +speed;
-
-        player.SetVelocity(player.GetVelocity() + (force * time.GetDeltaTime()));
-        player.Update(time.GetDeltaTime());
 
        /* velocity += (force * time.GetDeltaTime());
         position += (velocity * time.GetDeltaTime());
@@ -86,24 +75,24 @@ int main()
         position.y = math::Wrap(0.0f, 1280.0f, position.y);*/
 
         //RENDER
-        renderer.SetColorFloat(0, 0, 0);
-        renderer.Clear();
+        engine.GetRenderer().SetColorFloat(0, 0, 0);
+        engine.GetRenderer().Clear();
 
         //Draw Line
         for (int i = 0; i < (int)points.size() - 1; i++) {
-                renderer.SetColorFloat(nu::RandomFloat(), nu::RandomFloat(), nu::RandomFloat());
-                renderer.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            engine.GetRenderer().SetColorFloat(nu::RandomFloat(), nu::RandomFloat(), nu::RandomFloat());
+            engine.GetRenderer().DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 
         //Rectangle in the middle
-        player.Draw(renderer);
+        player.Draw(engine.GetRenderer());
        /* renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
         renderer.DrawFillRect(position.x, position.y, 40, 40);*/
 
-        renderer.Present();
+        engine.GetRenderer().Present();
     }
     //SHUTDOWN
-    renderer.Shutdown();
+    
 
     return 0;
 }

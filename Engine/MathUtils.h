@@ -1,10 +1,13 @@
 #pragma once
 
-namespace nu::math
+namespace nu
 {
-	constexpr float Pie = 3.14159265359f;
-	constexpr float TwoPie = Pie * 2;
-	constexpr float HalfPie = Pie / 2;
+	constexpr float Pi = 3.14159265359f;
+	constexpr float TwoPi = Pi * 2;
+	constexpr float HalfPi = Pi / 2;
+
+	constexpr float RadToDeg = 180.0f / Pi;
+	constexpr float DegToRad = Pi / 180.0f;
 
 	template<typename T>
 	T Min(T a, T b) {
