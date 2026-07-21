@@ -5,6 +5,7 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "MathUtils.h"
+#include "Transform.h"
 
 //systems
 #include "Renderer.h"
@@ -12,6 +13,7 @@
 #include "GameTime.h"
 
 #include "Actor.h"
+#include "Scene.h"
 
 
 namespace nu {

@@ -83,10 +83,13 @@ namespace nu
 
     void Renderer::DrawModel(const class Model& model, const struct Transform& transform) const
     {
-        SetColorFloat(1.0f, 1.0f, 1.0f, 1.0f);
+        
 
         for (auto mesh : model.GetMeshes()) {
 
+            
+
+            SetColorFloat(mesh.GetColor().r, mesh.GetColor().g, mesh.GetColor().b);
             auto& points = mesh.GetPoints();
 
             for (int i = 0; i + 1 < points.size(); i++) {

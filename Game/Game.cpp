@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Player.h"
+#include "Enemy.h"
 
 #include <iostream>
 #include <vector>
@@ -17,11 +18,38 @@ int main()
     //INITALIZATION
     engine.Initialize();
 
-    Mesh mesh{ {Vector2{2, 0}, Vector2{-2, 2}, Vector2{-1,0}, Vector2{2,0}, Vector2{-2,-2}, Vector2{-1,0}}, Color{0.0f, 0.0f, 1.0f} };
-    Player player{2000.0f, Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f }, std::vector<Mesh>{ mesh } };
 
-    Vector2 position{ 960.0f, 512.0f };
-    Vector2 velocity{ 0.0f, 0.0f };
+
+    Mesh meshOne{ {Vector2{2, 0}, Vector2{-2, 2}, Vector2{-1,0}, Vector2{2,0}, Vector2{-2,-2}, Vector2{-1,0}}, Color{0.0f, 0.0f, 205.0f} };
+    Mesh meshFlame{ {Vector2{-2,0}, Vector2{-3,1}, Vector2{-5,0}, Vector2{-3,-1}, Vector2{-2,0}}, Color{255.0f, 165.0f, 0.0f} };
+    Mesh meshTwo{ {Vector2{2, 0}, Vector2{-2, 2}, Vector2{-1,0}, Vector2{2,0}, Vector2{-2,-2}, Vector2{-1,0}}, Color{255.0f, 0.0f, 0.0f} };
+    Model modelOne{ std::vector<Mesh> {meshOne, meshFlame} };
+    Model modelTwo{ std::vector<Mesh> {meshTwo} };
+
+    Scene scene;
+
+    PlayerDesc playerDesc;
+    playerDesc.name = "Player";
+    playerDesc.model = modelOne;
+    playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
+    playerDesc.velocity = Vector2{ 0.0f, 0.0f };
+    playerDesc.speed = 2000.0f;
+
+    Player* player = new Player{ playerDesc };
+    scene.AddActor(player);
+
+    for (int i = 0; i < 20; i++) {
+        EnemyDesc enemyDesc;
+        enemyDesc.name = "Enemy";
+        enemyDesc.model = modelTwo;
+        enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)engine.GetRenderer().GetWidth()), (float)nu::RandomFloat(engine.GetRenderer().GetHeight())}, 90.0f, 10.0f };
+        enemyDesc.velocity = Vector2{ 0.0f, 0.0f };
+        enemyDesc.speed = 2000.0f;
+
+
+        Enemy* enemy = new Enemy{ enemyDesc };
+        scene.AddActor(enemy);
+    }
 
 
     //Photoshop
@@ -44,8 +72,9 @@ int main()
         //engine
         engine.Update();
 
-        player.SetRotation(player.GetTransform().rotation + (90.0f * engine.GetTime().GetDeltaTime()));
-        player.Update(engine.GetTime().GetDeltaTime());
+        float dt = engine.GetTime().GetDeltaTime();
+        
+        scene.Update(dt);
 
         if (engine.GetInput().GetButtonDown(Input::MouseButton::Left)) {
             if (points.empty())
@@ -68,11 +97,6 @@ int main()
             points.pop_back();
         }
 
-       /* velocity += (force * time.GetDeltaTime());
-        position += (velocity * time.GetDeltaTime());
-
-        position.x = math::Wrap(0.0f, 1920.0f, position.x);
-        position.y = math::Wrap(0.0f, 1280.0f, position.y);*/
 
         //RENDER
         engine.GetRenderer().SetColorFloat(0, 0, 0);
@@ -84,10 +108,8 @@ int main()
             engine.GetRenderer().DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 
-        //Rectangle in the middle
-        player.Draw(engine.GetRenderer());
-       /* renderer.SetColorFloat(1.0f, 1.0f, 1.0f);
-        renderer.DrawFillRect(position.x, position.y, 40, 40);*/
+        
+        scene.Draw(engine.GetRenderer());
 
         engine.GetRenderer().Present();
     }

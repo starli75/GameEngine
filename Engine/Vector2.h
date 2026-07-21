@@ -17,7 +17,7 @@ namespace nu
 		float& operator [] (unsigned int i) { assert(i < 2); return (&x)[i]; }
 		
 		bool operator == (const Vector2& v) const { return (this->x == v.x && this->y == v.y); }
-		bool operator != (const Vector2& v) const { return (this->x != v.x && this->y != v.y); }
+		bool operator != (const Vector2& v) const { return (this->x != v.x || this->y != v.y); }
 
 		Vector2 operator + (const Vector2& v) const { return Vector2{ this->x + v.x, this->y + v.y }; }
 		Vector2 operator - (const Vector2& v) const { return Vector2{ this->x - v.x, this->y - v.y }; }
@@ -40,7 +40,7 @@ namespace nu
 		Vector2& operator /= (float v) { this->x /= v, this->y /= v; return *this; }
 
 		float LengthSqr() const { return (x * x) + (y * y); }
-		float Length() const { return std::sqrt(x * x) + (y * y); }
+		float Length() const { return std::sqrt(LengthSqr()); }
 		Vector2 Normalized() const { return (*this) / Length(); }
 		float Dot(const Vector2& v) const { return (this->x * v.x) + (this->y * v.y); }
 		float Angle() const { return std::atan2(this->y, this->x); }
