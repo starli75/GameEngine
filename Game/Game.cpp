@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fmod.hpp>
 
 using namespace nu; //lets you take off the nu::
 
@@ -11,12 +12,40 @@ void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector i
     v[0].x = 40.0;
 }
 
+
+
+
+
 int main()
 {   
+    FMOD::System* audio;
+    FMOD::System_Create(&audio);
+
+
+    //Loads and plays sound
+    
+    /*audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
+
+    audio->playSound(sound, 0, false, nullptr);*/
+
+    void* extradriverdata = nullptr;
+    audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
+
+    std::vector<FMOD::Sound*> sounds;
+
+    FMOD::Sound* sound = nullptr;
+    audio->createSound("mario.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
+    audio->createSound("scream.mp3", FMOD_DEFAULT, 0, &sound);
+    sounds.push_back(sound);
+
     Color color;
     color.r = 1.0f;
     //INITALIZATION
     engine.Initialize();
+
+    audio->update();
 
 
 
@@ -67,6 +96,16 @@ int main()
             if (event.type == SDL_EVENT_KEY_DOWN && event.key.scancode == SDL_SCANCODE_ESCAPE) {
                 quit = true;
             }
+        }
+
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_1))
+        {
+            audio->playSound(sounds[0], nullptr, false, nullptr);
+        }
+
+        if (engine.GetInput().GetKeyPressed(SDL_SCANCODE_2))
+        {
+            audio->playSound(sounds[1], nullptr, false, nullptr);
         }
         
         //engine

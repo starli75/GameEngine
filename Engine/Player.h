@@ -2,6 +2,7 @@
 #include "Actor.h"
 
 
+
 struct PlayerDesc : public nu::ActorDesc
 {
     float speed;
@@ -11,6 +12,8 @@ struct PlayerDesc : public nu::ActorDesc
 class Player : public nu::Actor
 {
 public:
+
+
     Player() = default;
     Player(const PlayerDesc& playerDesc) :
         Actor{ playerDesc },
