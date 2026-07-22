@@ -1,5 +1,7 @@
 #pragma once
+#include "Actor.h"
 #include <vector>
+#include <string>
 
 
 namespace nu {
@@ -8,13 +10,31 @@ namespace nu {
 	class Scene
 	{
 	public:
-		void AddActor(class Actor* actor) { m_actors.push_back(actor); }
+		void AddActor(class Actor* actor);
 
 		void Update(float dt);
 		void Draw(const class Renderer& renderer);
+
+		template<typename T = Actor>
+		T* GetActorByName(const std::string& name);
 
 	private:
 		std::vector<class Actor*> m_actors;
 
 	};
+
+	template<typename T>
+	inline T* Scene::GetActorByName(const std::string& name)
+	{
+		for (auto actor : m_actors)
+		{
+			T* actorT = dynamic_cast<T*>(actor);
+			if (actorT && actorT->m_name == name)
+			{
+				return actorT;
+			}
+		}
+
+		return nullptr;
+	}
 }
