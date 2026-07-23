@@ -19,7 +19,8 @@ namespace nu {
 		T* GetActorByName(const std::string& name);
 
 	private:
-		std::vector<class Actor*> m_actors;
+		std::vector<Actor*> m_actors;
+		std::vector<Actor*> m_pendingActors;
 
 	};
 

@@ -18,54 +18,54 @@ void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector i
 int main()
 { 
     // get current working directory
-    std::cout << "Directory Operations:\n";
-    std::cout << "Working directory: " << nu::GetWorkingDirectory() << "\n";
+    //std::cout << "Directory Operations:\n";
+    //std::cout << "Working directory: " << nu::GetWorkingDirectory() << "\n";
 
-    // set working directory (current working directory + "Assets")
-    std::cout << "Setting directory to 'Assets'...\n";
-    nu::SetWorkingDirectory("Assets");
-    std::cout << "New directory: " << nu::GetWorkingDirectory() << "\n\n";
+    //// set working directory (current working directory + "Assets")
+    //std::cout << "Setting directory to 'Assets'...\n";
+    //nu::SetWorkingDirectory("Assets");
+    //std::cout << "New directory: " << nu::GetWorkingDirectory() << "\n\n";
 
-    // get filenames in the working directory
-    std::cout << "Files in Directory:\n";
-    auto filenames = nu::GetFilesInDirectory(nu::GetWorkingDirectory());
-    for (const auto& filename : filenames)
-    {
-        std::cout << filename << "\n";
-    }
-    std::cout << "\n";
+    //// get filenames in the working directory
+    //std::cout << "Files in Directory:\n";
+    //auto filenames = nu::GetFilesInDirectory(nu::GetWorkingDirectory());
+    //for (const auto& filename : filenames)
+    //{
+    //    std::cout << filename << "\n";
+    //}
+    //std::cout << "\n";
 
-    // get filename info
-    if (!filenames.empty())
-    {
-        // get filename
-        std::string str = nu::GetFilename(filenames[0]);
-        std::cout << "Filename: " << str << "\n";
+    //// get filename info
+    //if (!filenames.empty())
+    //{
+    //    // get filename
+    //    std::string str = nu::GetFilename(filenames[0]);
+    //    std::cout << "Filename: " << str << "\n";
 
-        // get extension
-        str = nu::GetFileExtension(filenames[0]);
-        std::cout << "Extension: " << str << "\n";
+    //    // get extension
+    //    str = nu::GetFileExtension(filenames[0]);
+    //    std::cout << "Extension: " << str << "\n";
 
-        // get filename no extension
-        str = nu::GetFilenameNoExtension(filenames[0]);
-        std::cout << "Filename No Extension: " << str << "\n\n";
-    }
+    //    // get filename no extension
+    //    str = nu::GetFilenameNoExtension(filenames[0]);
+    //    std::cout << "Filename No Extension: " << str << "\n\n";
+    //}
 
-    // read and display text file
-    std::cout << "Text File Reading:\n";
-    std::string str;
-    if (nu::ReadTextFile("test.txt", str))
-    {
-        std::cout << str << "\n";
-    }
+    //// read and display text file
+    //std::cout << "Text File Reading:\n";
+    //std::string str;
+    //if (nu::ReadTextFile("test.txt", str))
+    //{
+    //    std::cout << str << "\n";
+    //}
 
-    // write to text file
-    std::cout << "Text File Writing:\n";
-    nu::WriteTextFile("test.txt", "Hello, World!", true);
-    if (nu::ReadTextFile("test.txt", str))
-    {
-        std::cout << str << "\n";
-    }
+    //// write to text file
+    //std::cout << "Text File Writing:\n";
+    //nu::WriteTextFile("test.txt", "Hello, World!", true);
+    //if (nu::ReadTextFile("test.txt", str))
+    //{
+    //    std::cout << str << "\n";
+    //}
     // create audio system
     /*FMOD::System* audio;
     FMOD::System_Create(&audio);
@@ -113,6 +113,7 @@ int main()
     playerDesc.model = assets::playerModel;
     playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
     playerDesc.velocity = Vector2{ 0.0f, 0.0f };
+    playerDesc.damping = 3.0f;
     playerDesc.speed = 2000.0f;
 
     Player* player = new Player{ playerDesc };
@@ -124,7 +125,8 @@ int main()
         enemyDesc.model = assets::enemyModel;
         enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), (float)nu::RandomFloat(Engine::Get().GetRenderer().GetHeight())}, 90.0f, 10.0f};
         enemyDesc.velocity = Vector2{ 0.0f, 0.0f };
-        enemyDesc.speed = 2000.0f;
+        enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
+        enemyDesc.damping = 3.0f;
 
 
         Enemy* enemy = new Enemy{ enemyDesc };

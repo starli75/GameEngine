@@ -15,7 +15,10 @@ void Player::Update(float dt)
     float thrust = 0.0f;
 
 
-    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_W)) {thrust = m_speed;}
+    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_W)) {
+        
+        thrust = m_speed;
+    }
     if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_S)) thrust = -m_speed;
 
 
@@ -42,7 +45,7 @@ void Player::Update(float dt)
 
 
         Bullet* bullet = new Bullet{ bulletDesc };
-        m_scene.AddActor(bullet);
+        m_scene->AddActor(bullet);
     }
 
     Actor::Update(dt);

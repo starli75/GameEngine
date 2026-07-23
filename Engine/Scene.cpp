@@ -9,7 +9,7 @@ namespace nu
 	void Scene::AddActor(class Actor* actor) 
 	{
 		actor->m_scene = this;
-		m_actors.push_back(actor); 
+		m_pendingActors.push_back(actor); 
 	}
 
 	void Scene::Update(float dt)
@@ -18,6 +18,16 @@ namespace nu
 		{
 			actor->Update(dt);
 		}
+
+		//remove destroyed actors
+		std::erase_if(m_actors, [](auto actor) { return actor->m_destroyed; });
+
+		
+
+
+		//Add pending actors
+		m_actors.insert(m_actors.end(), m_pendingActors.begin(), m_pendingActors.end());
+		m_pendingActors.clear();
 	}
 
 	void Scene::Draw(const class Renderer& renderer) 
