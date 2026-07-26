@@ -1,8 +1,6 @@
 #pragma once
 #include "Actor.h"
 
-
-
 struct PlayerDesc : public nu::ActorDesc
 {
     float speed;
@@ -36,5 +34,5 @@ public:
 
 private:
     int m_ammo = 0;
-    float m_speed = 800.0f;
+    float m_speed = 2000.0f;
 };

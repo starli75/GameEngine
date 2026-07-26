@@ -113,8 +113,8 @@ int main()
     playerDesc.model = assets::playerModel;
     playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
     playerDesc.velocity = Vector2{ 0.0f, 0.0f };
-    playerDesc.damping = 3.0f;
-    playerDesc.speed = 2000.0f;
+    playerDesc.damping = 1.0f;
+    playerDesc.speed = 150000.0f;
 
     Player* player = new Player{ playerDesc };
     scene.AddActor(player);

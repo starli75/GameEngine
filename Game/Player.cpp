@@ -31,17 +31,18 @@ void Player::Update(float dt)
 
     nu::Vector2 forward{ 1,0 }; 
     nu::Vector2 velocity = forward.Rotate(m_transform.rotation * nu::DegToRad)* thrust;
-    AddVelocity(velocity * dt);
+    SetVelocity(velocity * dt);
 
     //Fire
     if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
     {
         BulletDesc bulletDesc;
+        bulletDesc.lifespan = 1.0f;
         bulletDesc.name = "Enemy";
         bulletDesc.tag = "Bullet";
         bulletDesc.model = assets::bulletModel;
         bulletDesc.transform = m_transform;
-        bulletDesc.speed = 4000.0f;
+        bulletDesc.speed = 2000.0f;
 
 
         Bullet* bullet = new Bullet{ bulletDesc };
