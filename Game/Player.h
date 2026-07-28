@@ -31,6 +31,7 @@ public:
 
     void Update(float dt) override;  
 
+    void OnCollision(Actor* other);
 
 private:
     int m_ammo = 0;

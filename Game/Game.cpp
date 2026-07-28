@@ -2,10 +2,13 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Assets.h"
+#include "Font.h"
+#include "Text.h"
 
 #include <iostream>
 #include <vector>
 #include <fmod.hpp>
+#include <map>
 
 using namespace nu; //lets you take off the nu::
 
@@ -17,67 +20,15 @@ void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector i
 
 int main()
 { 
-    // get current working directory
-    //std::cout << "Directory Operations:\n";
-    //std::cout << "Working directory: " << nu::GetWorkingDirectory() << "\n";
+    std::map<std::string, int> students;
+    students["Aiden"] = 16;
+    students["Jack"] = 17;
+    students["River"] = 15;
 
-    //// set working directory (current working directory + "Assets")
-    //std::cout << "Setting directory to 'Assets'...\n";
-    //nu::SetWorkingDirectory("Assets");
-    //std::cout << "New directory: " << nu::GetWorkingDirectory() << "\n\n";
+    
 
-    //// get filenames in the working directory
-    //std::cout << "Files in Directory:\n";
-    //auto filenames = nu::GetFilesInDirectory(nu::GetWorkingDirectory());
-    //for (const auto& filename : filenames)
-    //{
-    //    std::cout << filename << "\n";
-    //}
-    //std::cout << "\n";
+    SetWorkingDirectory("Assets");
 
-    //// get filename info
-    //if (!filenames.empty())
-    //{
-    //    // get filename
-    //    std::string str = nu::GetFilename(filenames[0]);
-    //    std::cout << "Filename: " << str << "\n";
-
-    //    // get extension
-    //    str = nu::GetFileExtension(filenames[0]);
-    //    std::cout << "Extension: " << str << "\n";
-
-    //    // get filename no extension
-    //    str = nu::GetFilenameNoExtension(filenames[0]);
-    //    std::cout << "Filename No Extension: " << str << "\n\n";
-    //}
-
-    //// read and display text file
-    //std::cout << "Text File Reading:\n";
-    //std::string str;
-    //if (nu::ReadTextFile("test.txt", str))
-    //{
-    //    std::cout << str << "\n";
-    //}
-
-    //// write to text file
-    //std::cout << "Text File Writing:\n";
-    //nu::WriteTextFile("test.txt", "Hello, World!", true);
-    //if (nu::ReadTextFile("test.txt", str))
-    //{
-    //    std::cout << str << "\n";
-    //}
-    // create audio system
-    /*FMOD::System* audio;
-    FMOD::System_Create(&audio);
-
-    void* extradriverdata = nullptr;
-    audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
-
-    FMOD::Sound* sound = nullptr;
-    audio->createSound("test.wav", FMOD_DEFAULT, 0, &sound);
-
-    audio->playSound(sound, 0, false, nullptr);*/
-    //AUDIO ASSIGNMENT CODE
     FMOD::System* audio;
     FMOD::System_Create(&audio);
 
@@ -87,14 +38,20 @@ int main()
     std::vector<FMOD::Sound*> sounds;
 
     FMOD::Sound* sound = nullptr;
-    audio->createSound("mario.mp3", FMOD_DEFAULT, 0, &sound);
+    audio->createSound("audio/mario.mp3", FMOD_DEFAULT, 0, &sound);
     sounds.push_back(sound);
 
-    audio->createSound("scream.mp3", FMOD_DEFAULT, 0, &sound);
+    audio->createSound("audio/scream.mp3", FMOD_DEFAULT, 0, &sound);
     sounds.push_back(sound);
 
     //INITALIZATION
     Engine::Get().Initialize();
+
+    Font* font = new Font();
+    font->Load("fonts/Blaster.ttf", 20);
+
+    Text* text = new Text(font);
+    text->Create(Engine::Get().GetRenderer(), "Hello World", Color{1.0f, 1.0f, 1.0f});
 
     audio->update();
 
@@ -202,13 +159,16 @@ int main()
             Engine::Get().GetRenderer().DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
         }
 
+        //Draw text
+        text->Draw(Engine::Get().GetRenderer(), 40.0f, 40.0f);
+
         
         scene.Draw(Engine::Get().GetRenderer());
 
         Engine::Get().GetRenderer().Present();
     }
     //SHUTDOWN
-    
+    Engine::Get().Shutdown();
 
     return 0;
 }

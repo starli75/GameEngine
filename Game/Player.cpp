@@ -34,12 +34,12 @@ void Player::Update(float dt)
     SetVelocity(velocity * dt);
 
     //Fire
-    if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
+    if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_SPACE))
     {
         BulletDesc bulletDesc;
         bulletDesc.lifespan = 1.0f;
-        bulletDesc.name = "Enemy";
-        bulletDesc.tag = "Bullet";
+        bulletDesc.name = "Bullet";
+        bulletDesc.tag = "PlayerBullet";
         bulletDesc.model = assets::bulletModel;
         bulletDesc.transform = m_transform;
         bulletDesc.speed = 2000.0f;
@@ -50,4 +50,13 @@ void Player::Update(float dt)
     }
 
     Actor::Update(dt);
+
 }
+    void Player::OnCollision(Actor* other)
+    {
+        if (other->GetName() == "Enemy")
+        {
+            SetDestroyed();
+        }
+    }
+
