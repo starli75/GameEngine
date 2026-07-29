@@ -4,6 +4,7 @@
 #include "Assets.h"
 #include "Font.h"
 #include "Text.h"
+#include "SpaceGame.h"
 
 #include <iostream>
 #include <vector>
@@ -20,38 +21,26 @@ void dosomething(std::vector<Vector2>& v) { //Refer to the already made vector i
 
 int main()
 { 
-    std::map<std::string, int> students;
-    students["Aiden"] = 16;
-    students["Jack"] = 17;
-    students["River"] = 15;
-
-    
-
     SetWorkingDirectory("Assets");
+
+    SpaceGame game;
+    game.Initialize();
 
     FMOD::System* audio;
     FMOD::System_Create(&audio);
 
-    void* extradriverdata = nullptr;
-    audio->init(32, FMOD_INIT_NORMAL, extradriverdata);
-
-    std::vector<FMOD::Sound*> sounds;
-
-    FMOD::Sound* sound = nullptr;
-    audio->createSound("audio/mario.mp3", FMOD_DEFAULT, 0, &sound);
-    sounds.push_back(sound);
-
-    audio->createSound("audio/scream.mp3", FMOD_DEFAULT, 0, &sound);
-    sounds.push_back(sound);
 
     //INITALIZATION
     Engine::Get().Initialize();
+    Engine::Get().GetAudio().Initialize();
 
     Font* font = new Font();
     font->Load("fonts/Blaster.ttf", 20);
 
     Text* text = new Text(font);
     text->Create(Engine::Get().GetRenderer(), "Hello World", Color{1.0f, 1.0f, 1.0f});
+
+    Engine::Get().GetAudio().AddSound("Mario", "C:/Users/vvega/Desktop/Year 2/C++ Programming 2/Assignments/Game/Build/Assets/mario.mp3");
 
     audio->update();
 
@@ -100,6 +89,7 @@ int main()
         //UPDATE
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+            Engine::Get().GetAudio().Update();
             if (event.type == SDL_EVENT_QUIT) {
                 quit = true;
             }
@@ -112,12 +102,7 @@ int main()
         //AUDIO
         if (Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_1))
         {
-            audio->playSound(sounds[0], nullptr, false, nullptr);
-        }
-
-        if (Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_2))
-        {
-            audio->playSound(sounds[1], nullptr, false, nullptr);
+            Engine::Get().GetAudio().PlaySound("Mario");
         }
         
         //Engine::Get()
@@ -169,6 +154,7 @@ int main()
     }
     //SHUTDOWN
     Engine::Get().Shutdown();
+    Engine::Get().GetAudio().Shutdown();
 
     return 0;
 }

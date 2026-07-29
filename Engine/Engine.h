@@ -15,6 +15,8 @@
 
 #include "Actor.h"
 #include "Scene.h"
+#include "Game.h"
+#include "Audio.h"
 
 namespace nu {
 	class Engine {
@@ -30,11 +32,14 @@ namespace nu {
 		Renderer& GetRenderer() { return m_renderer; }
 		Time& GetTime() { return m_time; }
 
+		Audio& GetAudio() { return m_audio; }
+
 	private:
 		Engine() = default;
 	private:
 		Input m_input;
 		Renderer m_renderer;
 		Time m_time;
+		Audio m_audio;
 	};
 }
