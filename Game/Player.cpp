@@ -6,7 +6,7 @@
 #include "Model.h"
 #include "Bullet.h"
 #include "Assets.h"
-
+#include "SpaceGame.h"
 
 
 void Player::Update(float dt)
@@ -33,6 +33,14 @@ void Player::Update(float dt)
     nu::Vector2 velocity = forward.Rotate(m_transform.rotation * nu::DegToRad)* thrust;
     SetVelocity(velocity * dt);
 
+    nu::Particle particle;
+    particle.position = m_transform.position;
+    particle.color = { 1.0f, 1.0f, 1.0f };
+    particle.lifespan = nu::RandomFloat(0.5f, 1.5f);
+    particle.velocity = { nu::RandomFloat(-200.0f, 200.0f), nu::RandomFloat(-200.0f, 200.0f) };
+
+    nu::Engine::Get().GetPS().AddParticle(particle);
+
     //Fire
     if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_SPACE))
     {
@@ -42,11 +50,23 @@ void Player::Update(float dt)
         bulletDesc.tag = "PlayerBullet";
         bulletDesc.model = assets::bulletModel;
         bulletDesc.transform = m_transform;
+        bulletDesc.transform.scale = 2.0f;
         bulletDesc.speed = 2000.0f;
 
 
         Bullet* bullet = new Bullet{ bulletDesc };
         m_scene->AddActor(bullet);
+
+       
+    }
+
+    if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_X)) 
+    {
+        nu::Engine::Get().GetTime().SetTimeScale(0.5f);
+    }
+    else
+    {
+        nu::Engine::Get().GetTime().SetTimeScale(1.0f);
     }
 
     Actor::Update(dt);
@@ -57,6 +77,8 @@ void Player::Update(float dt)
         if (other->GetName() == "Enemy")
         {
             SetDestroyed();
+
+            ((SpaceGame*)m_scene->GetGame())->OnPlayerDead();
         }
     }
 

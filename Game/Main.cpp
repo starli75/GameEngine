@@ -23,61 +23,16 @@ int main()
 { 
     SetWorkingDirectory("Assets");
 
-    SpaceGame game;
-    game.Initialize();
-
-    FMOD::System* audio;
-    FMOD::System_Create(&audio);
-
 
     //INITALIZATION
     Engine::Get().Initialize();
     Engine::Get().GetAudio().Initialize();
 
-    Font* font = new Font();
-    font->Load("fonts/Blaster.ttf", 20);
+    SpaceGame game;
+    game.Initialize();
 
-    Text* text = new Text(font);
-    text->Create(Engine::Get().GetRenderer(), "Hello World", Color{1.0f, 1.0f, 1.0f});
-
-    Engine::Get().GetAudio().AddSound("Mario", "C:/Users/vvega/Desktop/Year 2/C++ Programming 2/Assignments/Game/Build/Assets/mario.mp3");
-
-    audio->update();
-
-
-    
-   /* Mesh meshPlayer{ {Vector2{2, 0}, Vector2{-2, 2}, Vector2{-1,0}, Vector2{2,0}, Vector2{-2,-2}, Vector2{-1,0}}, Color{0.0f, 0.0f, 205.0f} };
-    Mesh meshFlame{ {Vector2{-2,0}, Vector2{-3,1}, Vector2{-5,0}, Vector2{-3,-1}, Vector2{-2,0}}, Color{255.0f, 165.0f, 0.0f} };
-    Mesh meshEnemy{ {Vector2{2, 0}, Vector2{-2, 2}, Vector2{-1,0}, Vector2{2,0}, Vector2{-2,-2}, Vector2{-1,0}}, Color{255.0f, 0.0f, 0.0f} };
-    Model modelPlayer{ std::vector<Mesh> {meshPlayer, meshFlame} };
-    Model modelEnemy{ std::vector<Mesh> {meshEnemy} };*/
-
-    Scene scene;
-
-    PlayerDesc playerDesc;
-    playerDesc.name = "Player";
-    playerDesc.model = assets::playerModel;
-    playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
-    playerDesc.velocity = Vector2{ 0.0f, 0.0f };
-    playerDesc.damping = 1.0f;
-    playerDesc.speed = 150000.0f;
-
-    Player* player = new Player{ playerDesc };
-    scene.AddActor(player);
-
-    for (int i = 0; i < 20; i++) {
-        EnemyDesc enemyDesc;
-        enemyDesc.name = "Enemy";
-        enemyDesc.model = assets::enemyModel;
-        enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), (float)nu::RandomFloat(Engine::Get().GetRenderer().GetHeight())}, 90.0f, 10.0f};
-        enemyDesc.velocity = Vector2{ 0.0f, 0.0f };
-        enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
-        enemyDesc.damping = 3.0f;
-
-
-        Enemy* enemy = new Enemy{ enemyDesc };
-        scene.AddActor(enemy);
-    }
+    FMOD::System* audio;
+    FMOD::System_Create(&audio);
 
 
     //Photoshop
@@ -108,9 +63,10 @@ int main()
         //Engine::Get()
         Engine::Get().Update();
 
+
         float dt = Engine::Get().GetTime().GetDeltaTime();
-        
-        scene.Update(dt);
+
+        game.Update(dt);
 
         if (Engine::Get().GetInput().GetButtonDown(Input::MouseButton::Left)) {
             if (points.empty())
@@ -145,10 +101,10 @@ int main()
         }
 
         //Draw text
-        text->Draw(Engine::Get().GetRenderer(), 40.0f, 40.0f);
-
+       
+        game.Draw(Engine::Get().GetRenderer());
         
-        scene.Draw(Engine::Get().GetRenderer());
+        Engine::Get().GetPS().Draw(Engine::Get().GetRenderer());
 
         Engine::Get().GetRenderer().Present();
     }
