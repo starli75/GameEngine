@@ -60,6 +60,8 @@ namespace nu
 			return false;
 		}
 
+
+		namePlaying = name;
 		// play sound from key
 		FMOD_RESULT result = m_fmodSystem->playSound(/*TODO: pass play sound parameters*/m_sounds[name], nullptr, false, nullptr);
 		if (!CheckFMODResult(result))

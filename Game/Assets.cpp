@@ -13,7 +13,7 @@ namespace assets
             Vector2{-2,-2}, 
             Vector2{-1,0}
         }, 
-        Color{0.0f, 0.0f, 205.0f} 
+        Color{0.0f, 0.0f, 100.0f} 
     };
     Mesh meshFlame{ 
         {
@@ -51,4 +51,20 @@ namespace assets
   Color{ 1.0f, 0.0f, 0.0f }
     };
     Model bulletModel{ std::vector<Mesh> {bulletMesh} };
+
+    Mesh healthMesh{
+        {
+        Vector2{0, 2},
+        Vector2{0, -2},
+        Vector2{0,0},
+        Vector2{-2,0},
+        Vector2{2, 0},
+        },
+        Color{0.0f, 1.0f, 0.0f}
+
+    };
+    Model healthModel{ std::vector<Mesh> {healthMesh} };
+
+
+
 }

@@ -33,31 +33,58 @@ void Player::Update(float dt)
     nu::Vector2 velocity = forward.Rotate(m_transform.rotation * nu::DegToRad)* thrust;
     SetVelocity(velocity * dt);
 
-    nu::Particle particle;
-    particle.position = m_transform.position;
+   /* nu::Particle particle;
+    particle.position = m_transform.position - ((forward * m_transform.scale) * 2);
     particle.color = { 1.0f, 1.0f, 1.0f };
     particle.lifespan = nu::RandomFloat(0.5f, 1.5f);
     particle.velocity = { nu::RandomFloat(-200.0f, 200.0f), nu::RandomFloat(-200.0f, 200.0f) };
 
-    nu::Engine::Get().GetPS().AddParticle(particle);
+    nu::Engine::Get().GetPS().AddParticle(particle);*/
 
     //Fire
-    if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_SPACE))
+    if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_L))
     {
-        BulletDesc bulletDesc;
-        bulletDesc.lifespan = 1.0f;
-        bulletDesc.name = "Bullet";
-        bulletDesc.tag = "PlayerBullet";
-        bulletDesc.model = assets::bulletModel;
-        bulletDesc.transform = m_transform;
-        bulletDesc.transform.scale = 2.0f;
-        bulletDesc.speed = 2000.0f;
+        laserOn = true;
+    }
+    if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_K))
+    {
+        laserOn = false;
+    }
+    switch (laserOn) {
+    case true:
+        if (nu::Engine::Get().GetInput().GetKeyDown(SDL_SCANCODE_SPACE))
+        {
+            BulletDesc bulletDesc;
+            bulletDesc.lifespan = 1.0f;
+            bulletDesc.name = "Bullet";
+            bulletDesc.tag = "PlayerBullet";
+            bulletDesc.model = assets::bulletModel;
+            bulletDesc.transform = m_transform;
+            bulletDesc.transform.scale = 2.0f;
+            bulletDesc.speed = 2000.0f;
 
 
-        Bullet* bullet = new Bullet{ bulletDesc };
-        m_scene->AddActor(bullet);
+            Bullet* bullet = new Bullet{ bulletDesc };
+            m_scene->AddActor(bullet);
+        }
+        break;
+    case false:
+        if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_SPACE))
+        {
+            BulletDesc bulletDesc;
+            bulletDesc.lifespan = 1.0f;
+            bulletDesc.name = "Bullet";
+            bulletDesc.tag = "PlayerBullet";
+            bulletDesc.model = assets::bulletModel;
+            bulletDesc.transform = m_transform;
+            bulletDesc.transform.scale = 2.0f;
+            bulletDesc.speed = 2000.0f;
 
-       
+
+            Bullet* bullet = new Bullet{ bulletDesc };
+            m_scene->AddActor(bullet);
+        }
+        break;
     }
 
     if (nu::Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_X)) 
@@ -76,9 +103,13 @@ void Player::Update(float dt)
     {
         if (other->GetName() == "Enemy")
         {
-            SetDestroyed();
+            m_health -= 25;
 
-            ((SpaceGame*)m_scene->GetGame())->OnPlayerDead();
+           /* if (m_health == 0)
+            {*/
+                SetDestroyed();
+                ((SpaceGame*)m_scene->GetGame())->OnPlayerDead();
+           /* }*/
         }
     }
 

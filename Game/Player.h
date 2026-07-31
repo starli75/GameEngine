@@ -10,7 +10,7 @@ struct PlayerDesc : public nu::ActorDesc
 class Player : public nu::Actor
 {
 public:
-
+    static Player& Get() { static Player player; return player; }
 
     Player() = default;
     Player(const PlayerDesc& playerDesc) :
@@ -33,7 +33,13 @@ public:
 
     void OnCollision(Actor* other);
 
+    int GetHealth() const { return m_health; }
+
 private:
     int m_ammo = 0;
     float m_speed = 2000.0f;
+    int m_health = 200;
+
+
+    bool laserOn = false;
 };

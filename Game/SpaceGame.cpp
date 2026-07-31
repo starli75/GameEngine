@@ -15,7 +15,7 @@ bool SpaceGame::Initialize()
 	m_scene->SetGame(this);
 
 	m_titleFont = new Font();
-	m_titleFont->Load("fonts/Blaster.ttf", 64);
+	m_titleFont->Load("fonts/Blaster.ttf", 100);
 
 	m_titleText = new Text(m_titleFont);
 	m_titleText->Create(Engine::Get().GetRenderer(), "Space Game", Color{ 1.0f, 1.0f, 1.0f });
@@ -25,7 +25,8 @@ bool SpaceGame::Initialize()
 
 	m_scoreText = new Text(m_gameFont);
 
-	/*Engine::Get().GetAudio().AddSound("Mario", "mario.mp3");*/
+	Engine::Get().GetAudio().AddSound("BattleAsteroid", "audio/BattleAsteroid.mp3");
+	Engine::Get().GetAudio().AddSound("AsteroidTitle", "audio/AsteroidTitle.mp3");
 	return true;
 }
 
@@ -34,6 +35,7 @@ void SpaceGame::Update(float dt)
 	switch (m_gamestate)
 	{
 	case SpaceGame::GameState::Title:
+
 		if (Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_SPACE))
 		{
 			m_gamestate = GameState::StartGame;
@@ -80,7 +82,7 @@ void SpaceGame::Draw(nu::Renderer& renderer)
 	{
 	case SpaceGame::GameState::Title:
 		//Draw title
-		m_titleText->Draw(renderer, 400, 400);
+		m_titleText->Draw(renderer, 600, 400);
 		break;
 	case SpaceGame::GameState::StartGame:
 		break;
@@ -92,10 +94,13 @@ void SpaceGame::Draw(nu::Renderer& renderer)
 	case SpaceGame::GameState::Game:
 		//Draw score and lives
 		m_scoreText->Create(renderer, "Score: " + std::to_string(m_score), { 1.0f, 1.0f, 1.0f });
-		m_scoreText->Draw(renderer, 30, 30);
+		m_scoreText->Draw(renderer, 30.0f, 30.0f);
+
+		m_scoreText->Create(renderer, "Health: " + std::to_string(Player::Get().GetHealth()), { 1.0f, 1.0f, 1.0f });
+		m_scoreText->Draw(renderer, 30.0f, 60.0f);
 
 		m_scoreText->Create(renderer, "Lives: " + std::to_string(m_lives), { 1.0f, 1.0f, 1.0f });
-		m_scoreText->Draw(renderer, renderer.GetWidth() - 120, 30);
+		m_scoreText->Draw(renderer, (float) renderer.GetWidth() - 120, 30.0f);
 		break;
 	case SpaceGame::GameState::GameOver:
 		//Draw game over
@@ -108,15 +113,21 @@ void SpaceGame::Draw(nu::Renderer& renderer)
 
 void SpaceGame::OnPlayerDead()
 {
-	m_lives--;
-	if (m_lives == 0) { m_gamestate = GameState::GameOver; }
-	else m_gamestate = GameState::StartLevel;
+	isHit++;
+	if (!(isHit % 2))
+	{
+		m_lives = m_lives - 1;
+		if (m_lives <= 0) { m_gamestate = GameState::GameOver; }
+		else m_gamestate = GameState::StartLevel;
+
+	}
 }
 
 void SpaceGame::SpawnPlayer()
 {
 	PlayerDesc playerDesc;
 	playerDesc.name = "Player";
+	
 	playerDesc.model = assets::playerModel;
 	playerDesc.transform = Transform{ Vector2{ 640.0f, 512.0f }, 0.0f, 15.0f };
 	playerDesc.velocity = Vector2{ 0.0f, 0.0f };
@@ -132,9 +143,9 @@ void SpaceGame::SpawnEnemy()
 	EnemyDesc enemyDesc;
 	enemyDesc.name = "Enemy";
 	enemyDesc.model = assets::enemyModel;
-	enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), (float)nu::RandomFloat(Engine::Get().GetRenderer().GetHeight())}, 90.0f, 10.0f };
+	enemyDesc.transform = Transform{ Vector2{ nu::RandomFloat((float)Engine::Get().GetRenderer().GetWidth()), nu::RandomFloat((float)Engine::Get().GetRenderer().GetHeight())}, 90.0f, 10.0f };
 	enemyDesc.velocity = Vector2{ 0.0f, 0.0f };
-	enemyDesc.speed = RandomFloat(1000.0f, 2000.0f);
+	enemyDesc.speed = RandomFloat(10000.0f, 15000.0f);
 	enemyDesc.damping = 3.0f;
 
 

@@ -34,6 +34,8 @@ int main()
     FMOD::System* audio;
     FMOD::System_Create(&audio);
 
+    Engine::Get().GetAudio().PlaySound("AsteroidTitle");
+
 
     //Photoshop
     std::vector<Vector2> points;
@@ -51,13 +53,6 @@ int main()
             if (event.type == SDL_EVENT_KEY_DOWN && event.key.scancode == SDL_SCANCODE_ESCAPE) {
                 quit = true;
             }
-        }
-
-
-        //AUDIO
-        if (Engine::Get().GetInput().GetKeyPressed(SDL_SCANCODE_1))
-        {
-            Engine::Get().GetAudio().PlaySound("Mario");
         }
         
         //Engine::Get()

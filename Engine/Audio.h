@@ -25,6 +25,6 @@ namespace nu
 		FMOD::System* m_fmodSystem = nullptr;
 		std::map<std::string, FMOD::Sound*> m_sounds;
 
-		
+		std::string namePlaying;
 	};
 }
